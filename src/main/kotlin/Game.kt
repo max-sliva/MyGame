@@ -3,10 +3,8 @@ import java.awt.Graphics2D
 import java.awt.RenderingHints
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import java.awt.event.KeyListener
 import javax.swing.JFrame
 import javax.swing.JPanel
-
 
 class Game : JPanel() {
     private var x = 0
@@ -30,6 +28,8 @@ class Game : JPanel() {
         @Throws(InterruptedException::class)
         @JvmStatic
         fun main(args: Array<String>) {
+            val pressedKeys: HashSet<Int> = HashSet()
+
             val frame = JFrame("Mini Tennis")
             val game = Game()
             frame.add(game)
@@ -37,17 +37,27 @@ class Game : JPanel() {
             frame.isVisible = true
             frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             frame.addKeyListener(object : KeyAdapter() {
-                override fun keyTyped(e: KeyEvent) {
-                    println("key typed")
-                }
+//                override fun keyTyped(e: KeyEvent) {
+//                    println("key typed")
+//                }
 
                 override fun keyPressed(e: KeyEvent) {
                     println("key pressed")
-                    if (e.keyCode == KeyEvent.VK_UP) game.moveUp()
-                    if (e.keyCode == KeyEvent.VK_LEFT) game.moveLeft()
-                    if (e.keyCode == KeyEvent.VK_DOWN) game.moveDown()
-                    if (e.keyCode == KeyEvent.VK_RIGHT) game.moveRight()
+                    pressedKeys.add(e.keyCode)
+                    if (pressedKeys.contains(KeyEvent.VK_UP) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveUp(1)
+                    if (pressedKeys.contains(KeyEvent.VK_LEFT) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveLeft(1)
+                    if (pressedKeys.contains(KeyEvent.VK_DOWN) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveDown(1)
+                    if (pressedKeys.contains(KeyEvent.VK_RIGHT) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveRight(1)
+                    if (pressedKeys.contains(KeyEvent.VK_UP) && pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveUp(3)
+                    if (pressedKeys.contains(KeyEvent.VK_LEFT) && pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveLeft(3)
+                    if (pressedKeys.contains(KeyEvent.VK_DOWN) && pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveDown(3)
+                    if (pressedKeys.contains(KeyEvent.VK_RIGHT) && pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveRight(3)
                     game.repaint()
+                }
+
+                override fun keyReleased(e: KeyEvent) {
+//                    super.keyReleased(e)
+                    pressedKeys.remove(e.keyCode)
                 }
             })
 //            while (true) {
@@ -58,19 +68,19 @@ class Game : JPanel() {
         }
     }
 
-    private fun moveRight() {
-        x++
+    private fun moveRight(i: Int) {
+        x+=i
     }
 
-    private fun moveDown() {
-        y++
+    private fun moveDown(i: Int) {
+        y+=i
     }
 
-    private fun moveLeft() {
-        x--
+    private fun moveLeft(i: Int) {
+        x-=i
     }
 
-    private fun moveUp() {
-        y--
+    private fun moveUp(i: Int) {
+        y-=i
     }
 }
