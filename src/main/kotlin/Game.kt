@@ -9,6 +9,7 @@ import javax.swing.JPanel
 class Game : JPanel() {
     private var x = 0
     private var y = 0
+    var moving = ""
     private fun moveBall() {
         x++
         y++
@@ -42,8 +43,13 @@ class Game : JPanel() {
 //                }
 
                 override fun keyPressed(e: KeyEvent) {
-                    println("key pressed")
-                    pressedKeys.add(e.keyCode)
+                    super.keyPressed(e)
+
+                    if (!pressedKeys.contains(e.keyCode)) {
+                        pressedKeys.add(e.keyCode)
+                        println("key pressed ${e.keyCode}")
+                        println("pressedKeys =  ${pressedKeys}")
+                    }
                     if (pressedKeys.contains(KeyEvent.VK_UP) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveUp(1)
                     if (pressedKeys.contains(KeyEvent.VK_LEFT) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveLeft(1)
                     if (pressedKeys.contains(KeyEvent.VK_DOWN) && !pressedKeys.contains(KeyEvent.VK_SHIFT)) game.moveDown(1)
@@ -57,7 +63,9 @@ class Game : JPanel() {
 
                 override fun keyReleased(e: KeyEvent) {
 //                    super.keyReleased(e)
+                    println("pressedKeys removes ${e.keyCode}")
                     pressedKeys.remove(e.keyCode)
+                    println("pressedKeys =  ${pressedKeys}")
                 }
             })
 //            while (true) {
@@ -68,19 +76,31 @@ class Game : JPanel() {
         }
     }
 
+    private fun checkMoving(s: String) {
+        if (moving!=s) {
+            moving = s
+            println(s)
+        }
+    }
+
     private fun moveRight(i: Int) {
         x+=i
+        checkMoving("right")
     }
+
 
     private fun moveDown(i: Int) {
         y+=i
+        checkMoving("down")
     }
 
     private fun moveLeft(i: Int) {
         x-=i
+        checkMoving("left")
     }
 
     private fun moveUp(i: Int) {
         y-=i
+        checkMoving("up")
     }
 }
