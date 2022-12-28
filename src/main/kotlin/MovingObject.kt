@@ -1,6 +1,7 @@
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
+import java.awt.Toolkit
 import java.awt.event.KeyEvent
 import java.lang.Thread.sleep
 import javax.swing.JPanel
@@ -20,6 +21,7 @@ class MovingObject(val pressedKeys: HashSet<Int>) : Runnable, JPanel() {
             RenderingHints.VALUE_ANTIALIAS_ON
         )
         g2d.fillOval(x, y, 30, 30)
+        Toolkit.getDefaultToolkit().sync()
     }
 
     private fun checkMoving(s: String) {
